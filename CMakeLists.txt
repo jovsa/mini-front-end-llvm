@@ -16,7 +16,7 @@ FetchContent_MakeAvailable(googletest)
 
 # Create library target without main()
 add_library(minimal_fe_lib OBJECT
-  src/minimal_fe.cc
+  src/minimal_fe.cpp
 )
 
 target_compile_definitions(minimal_fe_lib PRIVATE TESTING=1)
@@ -26,13 +26,13 @@ target_include_directories(minimal_fe_lib PUBLIC
 )
 
 # Main executable
-add_executable(minimal_fe src/minimal_fe.cc)
+add_executable(minimal_fe src/minimal_fe.cpp)
 
 # Test executable
 add_executable(minimal_fe_test
-  test/lexer_test.cc
-  test/parser_test.cc
-  test/ast_test.cc
+  test/lexer_test.cpp
+  test/parser_test.cpp
+  test/ast_test.cpp
   $<TARGET_OBJECTS:minimal_fe_lib>
 )
 

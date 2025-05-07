@@ -12,7 +12,7 @@ Aiming to impliment this in <= 1000 lines of code.
 
 To compile and run the minimal frontend:
 ```bash
-clang++ -std=c++14 -g -O3 src/minimal_fe.cc && ./a.out
+clang++ -std=c++14 -g -O3 src/minimal_fe.cpp && ./a.out
 ```
 
 The program accepts various inputs:

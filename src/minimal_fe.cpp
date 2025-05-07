@@ -1,4 +1,4 @@
-// minimal_fe.cc
+// minimal_fe.cpp
 // Implementation of a simple LLVM IR front end.
 // Follows the Google C++ Style Guide.
 
@@ -78,14 +78,10 @@ int gettok() {
 // Parser
 //===----------------------------------------------------------------------===//
 
-static int CurTok;
-
-// Forward declarations
-std::unique_ptr<ExprAST> ParseExpression();
+int CurTok;
+std::map<char, int> BinopPrecedence;
 
 int getNextToken() { return CurTok = gettok(); }
-
-std::map<char, int> BinopPrecedence;
 
 int GetTokPrecedence() {
   if (!isascii(CurTok))
@@ -108,14 +104,12 @@ std::unique_ptr<PrototypeAST> LogErrorP(const char *Str) {
   return nullptr;
 }
 
-/// numberexpr ::= number
 std::unique_ptr<ExprAST> ParseNumberExpr() {
   auto Result = std::make_unique<NumberExprAST>(NumVal);
   getNextToken(); // consume the number
   return std::move(Result);
 }
 
-/// parenexpr ::= '(' expression ')'
 std::unique_ptr<ExprAST> ParseParenExpr() {
   getNextToken(); // eat (.
   auto V = ParseExpression();
@@ -128,9 +122,6 @@ std::unique_ptr<ExprAST> ParseParenExpr() {
   return V;
 }
 
-/// identifierexpr
-///   ::= identifier
-///   ::= identifier '(' expression* ')'
 std::unique_ptr<ExprAST> ParseIdentifierExpr() {
   std::string IdName = IdentifierStr;
 
@@ -164,10 +155,6 @@ std::unique_ptr<ExprAST> ParseIdentifierExpr() {
   return std::make_unique<CallExprAST>(IdName, std::move(Args));
 }
 
-/// primary
-///   ::= identifierexpr
-///   ::= numberexpr
-///   ::= parenexpr
 std::unique_ptr<ExprAST> ParsePrimary() {
   switch (CurTok) {
   default:
@@ -181,8 +168,6 @@ std::unique_ptr<ExprAST> ParsePrimary() {
   }
 }
 
-/// binoprhs
-///   ::= ('+' primary)*
 std::unique_ptr<ExprAST> ParseBinOpRHS(int ExprPrec,
                                         std::unique_ptr<ExprAST> LHS) {
   // If this is a binop, find its precedence.
@@ -217,9 +202,6 @@ std::unique_ptr<ExprAST> ParseBinOpRHS(int ExprPrec,
   }
 }
 
-/// expression
-///   ::= primary binoprhs
-///
 std::unique_ptr<ExprAST> ParseExpression() {
   auto LHS = ParsePrimary();
   if (!LHS)
@@ -228,8 +210,6 @@ std::unique_ptr<ExprAST> ParseExpression() {
   return ParseBinOpRHS(0, std::move(LHS));
 }
 
-/// prototype
-///   ::= id '(' id* ')'
 std::unique_ptr<PrototypeAST> ParsePrototype() {
   if (CurTok != tok_identifier)
     return LogErrorP("Expected function name in prototype");
@@ -252,7 +232,6 @@ std::unique_ptr<PrototypeAST> ParsePrototype() {
   return std::make_unique<PrototypeAST>(FnName, std::move(ArgNames));
 }
 
-/// definition ::= 'def' prototype expression
 std::unique_ptr<FunctionAST> ParseDefinition() {
   getNextToken(); // eat def.
   auto Proto = ParsePrototype();
@@ -264,7 +243,6 @@ std::unique_ptr<FunctionAST> ParseDefinition() {
   return nullptr;
 }
 
-/// toplevelexpr ::= expression
 std::unique_ptr<FunctionAST> ParseTopLevelExpr() {
   if (auto E = ParseExpression()) {
     // Make an anonymous proto.
@@ -275,7 +253,6 @@ std::unique_ptr<FunctionAST> ParseTopLevelExpr() {
   return nullptr;
 }
 
-/// external ::= 'extern' prototype
 std::unique_ptr<PrototypeAST> ParseExtern() {
   getNextToken(); // eat extern.
   return ParsePrototype();
@@ -285,7 +262,7 @@ std::unique_ptr<PrototypeAST> ParseExtern() {
 // Top-Level parsing
 //===----------------------------------------------------------------------===//
 
-static void HandleDefinition() {
+void HandleDefinition() {
   if (ParseDefinition()) {
     fprintf(stderr, "Parsed a function definition.\n");
   } else {
@@ -294,7 +271,7 @@ static void HandleDefinition() {
   }
 }
 
-static void HandleExtern() {
+void HandleExtern() {
   if (ParseExtern()) {
     fprintf(stderr, "Parsed an extern\n");
   } else {
@@ -303,7 +280,7 @@ static void HandleExtern() {
   }
 }
 
-static void HandleTopLevelExpression() {
+void HandleTopLevelExpression() {
   // Evaluate a top-level expression into an anonymous function.
   if (ParseTopLevelExpr()) {
     fprintf(stderr, "Parsed a top-level expr\n");
