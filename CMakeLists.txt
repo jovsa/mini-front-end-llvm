@@ -30,9 +30,9 @@ add_executable(minimal_fe src/minimal_fe.cpp)
 
 # Test executable
 add_executable(minimal_fe_test
-  test/lexer_test.cpp
-  test/parser_test.cpp
-  test/ast_test.cpp
+  tests/lexer_test.cpp
+  tests/parser_test.cpp
+  tests/ast_test.cpp
   $<TARGET_OBJECTS:minimal_fe_lib>
 )
 

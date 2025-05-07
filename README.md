@@ -32,23 +32,13 @@ Press Ctrl+C to exit the program.
 
 ## Running Tests
 
-The project uses Google Test for unit testing. To build and run the tests:
+The project uses Google Test for unit testing. To run the tests:
 
 ```bash
-# Create a build directory
-mkdir build && cd build
-
-# Configure with CMake
-cmake ..
-
-# Build
-make
-
-# Run tests
-ctest
+./build/minimal_fe_test
 ```
 
-Or run the test executable directly:
+Or to build and run in one command:
 ```bash
-./minimal_fe_test
+mkdir -p build && cd build && cmake .. && make && ./minimal_fe_test
 ```
