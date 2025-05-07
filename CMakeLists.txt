@@ -29,10 +29,9 @@ target_include_directories(minimal_fe_lib PUBLIC
 add_executable(minimal_fe src/minimal_fe.cpp)
 
 # Test executable
+file(GLOB TEST_SOURCES "tests/*_test.cpp")
 add_executable(minimal_fe_test
-  tests/lexer_test.cpp
-  tests/parser_test.cpp
-  tests/ast_test.cpp
+  ${TEST_SOURCES}
   $<TARGET_OBJECTS:minimal_fe_lib>
 )
 
