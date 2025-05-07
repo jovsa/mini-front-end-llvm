@@ -4,7 +4,7 @@ A simple front end for LLVM IR.
 Mainly for educational and benchmarking purposes.
 Aiming to impliment this in <= 1000 lines of code.
 
-[![Tests](https://github.com/jovan.sardinha/mini-front-end-llvm/actions/workflows/tests.yml/badge.svg)](https://github.com/jovan.sardinha/mini-front-end-llvm/actions/workflows/tests.yml)
+[![Tests](https://github.com/jovsa/mini-front-end-llvm/actions/workflows/tests.yml/badge.svg)](https://github.com/jovsa/mini-front-end-llvm/actions/workflows/tests.yml)
 
 ## Building and Running
 
